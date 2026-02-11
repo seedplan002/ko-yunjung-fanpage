@@ -1,3 +1,7 @@
+"use client";
+
+import useScrollAnimation from "@/hooks/useScrollAnimation";
+
 const galleryItems = [
   {
     title: "환혼",
@@ -38,11 +42,17 @@ const galleryItems = [
 ];
 
 export default function Gallery() {
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
+
   return (
     <section id="gallery" className="relative py-32 px-6">
       <div className="mx-auto max-w-7xl">
         {/* Section Title */}
-        <div className="mb-20 text-center">
+        <div
+          ref={titleRef}
+          className={`mb-20 text-center scroll-hidden ${titleVisible ? "scroll-visible" : ""}`}
+        >
           <span className="mb-4 inline-block text-xs tracking-[0.4em] text-[#c9a87c]/60 uppercase">
             Gallery
           </span>
@@ -52,11 +62,12 @@ export default function Gallery() {
         </div>
 
         {/* Grid */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div ref={gridRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {galleryItems.map((item, index) => (
             <div
               key={index}
-              className="group relative h-80 cursor-pointer overflow-hidden rounded-xl"
+              className={`group relative h-80 cursor-pointer overflow-hidden rounded-xl scroll-hidden-scale ${gridVisible ? "scroll-visible-scale" : ""}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               {/* Background gradient */}
               <div
@@ -75,7 +86,7 @@ export default function Gallery() {
 
               {/* Center icon */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#c9a87c]/20 transition-all duration-500 group-hover:scale-110 group-hover:border-[#c9a87c]/40">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#c9a87c]/20 transition-all duration-500 group-hover:scale-110 group-hover:border-[#c9a87c]/40 group-hover:shadow-lg group-hover:shadow-[#c9a87c]/10">
                   <svg
                     className="h-8 w-8 text-[#c9a87c]/40 transition-colors group-hover:text-[#c9a87c]/70"
                     fill="none"
