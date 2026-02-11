@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import useScrollAnimation from "@/hooks/useScrollAnimation";
 
 export default function FanMessage() {
   const [messages] = useState([
@@ -34,6 +35,11 @@ export default function FanMessage() {
   const [text, setText] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Lower threshold (0.1) for messages list to trigger animation earlier
+  const { ref: messagesRef, isVisible: messagesVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: formRef, isVisible: formVisible } = useScrollAnimation();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (nickname.trim() && text.trim()) {
@@ -48,7 +54,10 @@ export default function FanMessage() {
     <section className="relative py-32 px-6">
       <div className="mx-auto max-w-5xl">
         {/* Section Title */}
-        <div className="mb-20 text-center">
+        <div
+          ref={titleRef}
+          className={`mb-20 text-center scroll-hidden ${titleVisible ? "scroll-visible" : ""}`}
+        >
           <span className="mb-4 inline-block text-xs tracking-[0.4em] text-[#c9a87c]/60 uppercase">
             Fan Messages
           </span>
@@ -62,11 +71,12 @@ export default function FanMessage() {
 
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Messages */}
-          <div className="space-y-4">
+          <div ref={messagesRef} className="space-y-4">
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-[#c9a87c]/10 bg-[#141414]/60 p-5 transition-all duration-300 hover:border-[#c9a87c]/20"
+                className={`rounded-xl border border-[#c9a87c]/10 bg-[#141414]/60 p-5 transition-all duration-300 hover:border-[#c9a87c]/20 hover:-translate-y-0.5 scroll-hidden-left ${messagesVisible ? "scroll-visible-x" : ""}`}
+                style={{ transitionDelay: `${index * 120}ms` }}
               >
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-sm font-medium text-[#c9a87c]/80">
@@ -82,7 +92,10 @@ export default function FanMessage() {
           </div>
 
           {/* Form */}
-          <div className="flex items-start">
+          <div
+            ref={formRef}
+            className={`flex items-start scroll-hidden-right ${formVisible ? "scroll-visible-x" : ""}`}
+          >
             <form
               onSubmit={handleSubmit}
               className="w-full rounded-xl border border-[#c9a87c]/10 bg-[#141414]/60 p-8"
@@ -127,7 +140,7 @@ export default function FanMessage() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-[#c9a87c]/20 py-3 text-sm tracking-widest text-[#c9a87c] uppercase transition-all duration-300 hover:bg-[#c9a87c]/30"
+                className="w-full rounded-lg bg-[#c9a87c]/20 py-3 text-sm tracking-widest text-[#c9a87c] uppercase transition-all duration-300 hover:bg-[#c9a87c]/30 hover:shadow-lg hover:shadow-[#c9a87c]/10"
               >
                 전송하기
               </button>

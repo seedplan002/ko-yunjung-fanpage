@@ -1,3 +1,7 @@
+"use client";
+
+import useScrollAnimation from "@/hooks/useScrollAnimation";
+
 const filmographyData = [
   {
     year: "2024",
@@ -75,6 +79,10 @@ const filmographyData = [
 ];
 
 export default function Filmography() {
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Lower threshold (0.05) for timeline as it's a long vertical section
+  const { ref: timelineRef, isVisible: timelineVisible } = useScrollAnimation({ threshold: 0.05 });
+
   return (
     <section id="filmography" className="relative py-32 px-6">
       {/* Background accent */}
@@ -88,7 +96,10 @@ export default function Filmography() {
 
       <div className="relative mx-auto max-w-5xl">
         {/* Section Title */}
-        <div className="mb-20 text-center">
+        <div
+          ref={titleRef}
+          className={`mb-20 text-center scroll-hidden ${titleVisible ? "scroll-visible" : ""}`}
+        >
           <span className="mb-4 inline-block text-xs tracking-[0.4em] text-[#c9a87c]/60 uppercase">
             Filmography
           </span>
@@ -98,12 +109,16 @@ export default function Filmography() {
         </div>
 
         {/* Timeline */}
-        <div className="relative">
+        <div ref={timelineRef} className="relative">
           {/* Vertical line */}
           <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#c9a87c]/20 to-transparent md:left-1/2 md:-translate-x-1/2" />
 
           {filmographyData.map((yearGroup, groupIndex) => (
-            <div key={yearGroup.year} className="relative mb-16 last:mb-0">
+            <div
+              key={yearGroup.year}
+              className={`relative mb-16 last:mb-0 scroll-hidden ${timelineVisible ? "scroll-visible" : ""}`}
+              style={{ transitionDelay: `${groupIndex * 150}ms` }}
+            >
               {/* Year badge */}
               <div className="relative mb-8 flex items-center md:justify-center">
                 <div className="glass rounded-full px-6 py-2 ml-6 md:ml-0">
@@ -129,7 +144,7 @@ export default function Filmography() {
                           isEven ? "md:pr-8" : "md:pl-8"
                         }`}
                       >
-                        <div className="group rounded-xl border border-[#c9a87c]/10 bg-[#141414]/80 p-6 transition-all duration-500 hover:border-[#c9a87c]/30 hover:bg-[#141414]">
+                        <div className="group rounded-xl border border-[#c9a87c]/10 bg-[#141414]/80 p-6 transition-all duration-500 hover:border-[#c9a87c]/30 hover:bg-[#141414] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#c9a87c]/5">
                           <div className="mb-3 flex items-center gap-3">
                             <span className="rounded-full bg-[#c9a87c]/10 px-3 py-1 text-xs text-[#c9a87c]/80">
                               {work.type}

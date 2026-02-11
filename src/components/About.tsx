@@ -1,3 +1,7 @@
+"use client";
+
+import useScrollAnimation from "@/hooks/useScrollAnimation";
+
 export default function About() {
   const profileInfo = [
     { label: "본명", value: "고윤정 (Ko Yun-jung)" },
@@ -9,11 +13,18 @@ export default function About() {
     { label: "데뷔", value: "2020년 드라마 '녹두전'" },
   ];
 
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  const { ref: portraitRef, isVisible: portraitVisible } = useScrollAnimation();
+  const { ref: infoRef, isVisible: infoVisible } = useScrollAnimation();
+
   return (
     <section id="about" className="relative py-32 px-6">
       <div className="mx-auto max-w-6xl">
         {/* Section Title */}
-        <div className="mb-20 text-center">
+        <div
+          ref={titleRef}
+          className={`mb-20 text-center scroll-hidden ${titleVisible ? "scroll-visible" : ""}`}
+        >
           <span className="mb-4 inline-block text-xs tracking-[0.4em] text-[#c9a87c]/60 uppercase">
             Profile
           </span>
@@ -24,7 +35,10 @@ export default function About() {
 
         <div className="grid gap-16 lg:grid-cols-2">
           {/* Portrait Placeholder */}
-          <div className="relative flex items-center justify-center">
+          <div
+            ref={portraitRef}
+            className={`relative flex items-center justify-center scroll-hidden-left ${portraitVisible ? "scroll-visible-x" : ""}`}
+          >
             <div className="relative h-[500px] w-full max-w-[380px] overflow-hidden rounded-2xl mx-auto">
               {/* Elegant gradient placeholder */}
               <div
@@ -35,7 +49,7 @@ export default function About() {
                 }}
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="mb-6 h-32 w-32 rounded-full border-2 border-[#c9a87c]/20 flex items-center justify-center">
+                <div className="mb-6 h-32 w-32 rounded-full border-2 border-[#c9a87c]/20 flex items-center justify-center animate-pulse-glow">
                   <svg
                     className="h-16 w-16 text-[#c9a87c]/30"
                     fill="none"
@@ -61,7 +75,10 @@ export default function About() {
           </div>
 
           {/* Info */}
-          <div className="flex flex-col justify-center">
+          <div
+            ref={infoRef}
+            className={`flex flex-col justify-center scroll-hidden-right ${infoVisible ? "scroll-visible-x" : ""}`}
+          >
             <p className="mb-10 text-base leading-8 text-[#f5f0eb]/60 font-light">
               고윤정은 대한민국의 배우로, 뛰어난 미모와 탄탄한 연기력으로 주목받고
               있습니다. 2020년 드라마 &apos;녹두전&apos;으로 데뷔한 이후,
@@ -75,7 +92,8 @@ export default function About() {
               {profileInfo.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center border-b border-[#c9a87c]/10 pb-4"
+                  className="flex items-center border-b border-[#c9a87c]/10 pb-4 transition-all duration-300 hover:pl-2 hover:border-[#c9a87c]/30"
+                  style={{ transitionDelay: `${index * 80}ms` }}
                 >
                   <span className="w-24 shrink-0 text-xs tracking-widest text-[#c9a87c]/60 uppercase">
                     {item.label}

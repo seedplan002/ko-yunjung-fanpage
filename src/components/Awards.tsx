@@ -1,3 +1,7 @@
+"use client";
+
+import useScrollAnimation from "@/hooks/useScrollAnimation";
+
 const awardsData = [
   {
     year: "2023",
@@ -42,6 +46,10 @@ const awardsData = [
 ];
 
 export default function Awards() {
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Slightly lower threshold (0.1) for better trigger timing on list items
+  const { ref: listRef, isVisible: listVisible } = useScrollAnimation({ threshold: 0.1 });
+
   return (
     <section id="awards" className="relative py-32 px-6">
       {/* Background */}
@@ -55,7 +63,10 @@ export default function Awards() {
 
       <div className="relative mx-auto max-w-4xl">
         {/* Section Title */}
-        <div className="mb-20 text-center">
+        <div
+          ref={titleRef}
+          className={`mb-20 text-center scroll-hidden ${titleVisible ? "scroll-visible" : ""}`}
+        >
           <span className="mb-4 inline-block text-xs tracking-[0.4em] text-[#c9a87c]/60 uppercase">
             Awards
           </span>
@@ -65,9 +76,13 @@ export default function Awards() {
         </div>
 
         {/* Awards List */}
-        <div className="space-y-12">
-          {awardsData.map((yearGroup) => (
-            <div key={yearGroup.year}>
+        <div ref={listRef} className="space-y-12">
+          {awardsData.map((yearGroup, groupIndex) => (
+            <div
+              key={yearGroup.year}
+              className={`scroll-hidden ${listVisible ? "scroll-visible" : ""}`}
+              style={{ transitionDelay: `${groupIndex * 200}ms` }}
+            >
               <div className="mb-6 flex items-center gap-4">
                 <span className="gradient-text text-2xl font-light">
                   {yearGroup.year}
@@ -79,10 +94,10 @@ export default function Awards() {
                 {yearGroup.awards.map((award, index) => (
                   <div
                     key={index}
-                    className="group flex items-start gap-4 rounded-lg border border-transparent p-4 transition-all duration-300 hover:border-[#c9a87c]/10 hover:bg-[#141414]/50"
+                    className="group flex items-start gap-4 rounded-lg border border-transparent p-4 transition-all duration-300 hover:border-[#c9a87c]/10 hover:bg-[#141414]/50 hover:-translate-y-0.5"
                   >
                     {/* Trophy icon */}
-                    <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c9a87c]/10">
+                    <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c9a87c]/10 transition-all duration-300 group-hover:bg-[#c9a87c]/20 group-hover:shadow-md group-hover:shadow-[#c9a87c]/10">
                       <svg
                         className="h-5 w-5 text-[#c9a87c]/60 transition-colors group-hover:text-[#c9a87c]"
                         fill="none"
