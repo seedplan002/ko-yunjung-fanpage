@@ -47,6 +47,7 @@ const awardsData = [
 
 export default function Awards() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Slightly lower threshold (0.1) for better trigger timing on list items
   const { ref: listRef, isVisible: listVisible } = useScrollAnimation({ threshold: 0.1 });
 
   return (

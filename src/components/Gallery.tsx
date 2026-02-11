@@ -43,6 +43,7 @@ const galleryItems = [
 
 export default function Gallery() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Slightly lower threshold (0.1) for grid to trigger animation earlier
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
 
   return (

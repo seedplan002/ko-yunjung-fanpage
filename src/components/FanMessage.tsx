@@ -36,6 +36,7 @@ export default function FanMessage() {
   const [submitted, setSubmitted] = useState(false);
 
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Lower threshold (0.1) for messages list to trigger animation earlier
   const { ref: messagesRef, isVisible: messagesVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: formRef, isVisible: formVisible } = useScrollAnimation();
 

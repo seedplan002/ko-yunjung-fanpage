@@ -80,6 +80,7 @@ const filmographyData = [
 
 export default function Filmography() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  // Lower threshold (0.05) for timeline as it's a long vertical section
   const { ref: timelineRef, isVisible: timelineVisible } = useScrollAnimation({ threshold: 0.05 });
 
   return (
