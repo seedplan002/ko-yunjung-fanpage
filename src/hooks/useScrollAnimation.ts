@@ -10,7 +10,7 @@ interface ScrollAnimationOptions {
 
 export default function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
   options: ScrollAnimationOptions = {}
-) {
+): { ref: React.RefObject<T>; isVisible: boolean } {
   const { threshold = 0.15, rootMargin = "0px", triggerOnce = true } = options;
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -34,7 +34,12 @@ export default function useScrollAnimation<T extends HTMLElement = HTMLDivElemen
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      if (element) {
+        observer.unobserve(element);
+      }
+      observer.disconnect();
+    };
   }, [threshold, rootMargin, triggerOnce]);
 
   return { ref, isVisible };
